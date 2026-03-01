@@ -44,3 +44,14 @@ def test_signup_and_remove_sequence(client):
     # Assert removal
     assert removal.status_code == 200
     assert app_module.activities["yoga"]["participants"] == []
+
+
+def test_signup_nonexistent_activity(client):
+    # Arrange
+    app_module.activities.clear()
+
+    # Act
+    response = client.post("/activities/nonexistent/signup", params={"email": "nobody@example.com"})
+
+    # Assert
+    assert response.status_code == 404

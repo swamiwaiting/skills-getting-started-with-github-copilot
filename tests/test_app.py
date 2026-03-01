@@ -96,3 +96,29 @@ def test_remove_nonexistent_activity(client):
 
     # Assert
     assert response.status_code == 404
+
+
+def test_signup_nonexistent_activity(client):
+    # Arrange
+    app_module.activities.clear()
+
+    # Act
+    response = client.post(
+        "/activities/nonexistent/signup", params={"email": "test@example.com"}
+    )
+
+    # Assert
+    assert response.status_code == 404
+
+
+def test_get_activities_with_data(client):
+    # Arrange
+    app_module.activities.clear()
+    app_module.activities["drawing"] = {"participants": []}
+
+    # Act
+    response = client.get("/activities")
+
+    # Assert
+    assert response.status_code == 200
+    assert "drawing" in response.json()

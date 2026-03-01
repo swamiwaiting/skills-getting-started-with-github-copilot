@@ -50,7 +50,10 @@ document.addEventListener("DOMContentLoaded", () => {
           ${participantHtml}
         `;
 
-        // Attach delete handlers after element is inserted
+        // append card before attaching delete handlers so listener setup is straightforward
+        activitiesList.appendChild(activityCard);
+
+        // Attach delete handlers now that the element is in the DOM
         if (details.participants && details.participants.length > 0) {
           activityCard.querySelectorAll('.delete-icon').forEach(icon => {
             icon.addEventListener('click', async (evt) => {
@@ -64,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   { method: 'DELETE' }
                 );
                 if (resp.ok) {
-                  // refresh activities display
+                  // refresh activities display after successful deletion
                   fetchActivities();
                 } else {
                   const err = await resp.json();
@@ -79,16 +82,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
           });
         }
-
-        activityCard.innerHTML = `
-          <h4>${name}</h4>
-          <p>${details.description}</p>
-          <p><strong>Schedule:</strong> ${details.schedule}</p>
-          <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
-          ${participantHtml}
-        `;
-
-        activitiesList.appendChild(activityCard);
 
         // Add option to select dropdown
         const option = document.createElement("option");
